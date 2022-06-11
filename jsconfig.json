@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@helpers/*":["./src/helpers/*","./src/helpers/"],
+      "@routes/*":["./src/routes/*","./src/routes/"],
+      "@models/*":["./src/models/*","./src/models/"],
+      "@controllers/*":["./src/controllers/*","./src/controllers/"],
+      "@actions/*":["./src/redux/actions/*","./src/redux/actions/"],
+      "@reducers/*":["./src/redux/reducers/*","./src/redux/reducers/"],
+    }
+  }
+}

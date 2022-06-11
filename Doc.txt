@@ -1,0 +1,6 @@
+Error codes:
+500 internal server Error
+201 creation successful
+400 not found
+422 invalid data
+429 already exist
