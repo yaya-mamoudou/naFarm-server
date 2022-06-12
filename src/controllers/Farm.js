@@ -100,4 +100,27 @@ const updateFarm = async (req, res) => {
 	}
 };
 
-module.exports = { createFarm, updateFarm };
+const post_farm_activity = async (req, res) => {
+	try {
+		checkErrors(req, res);
+		const { title, image, description, blog } = req.body;
+		console.log({ title, image, description, blog });
+		const insertActivity = await Farm.findByIdAndUpdate(
+			req.params.id,
+			{
+				$push: { farm_activities: { title, image, description, blog } },
+			},
+			{ new: true }
+		);
+
+		return res.status(201).json(insertActivity);
+	} catch (error) {
+		if (error.errors) {
+			return res.status(422).send(error);
+		}
+		console.log(error);
+		return res.status(500).send(error);
+	}
+};
+
+module.exports = { createFarm, updateFarm, post_farm_activity };

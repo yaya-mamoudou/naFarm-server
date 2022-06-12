@@ -9,10 +9,7 @@ const createInvestment = async (req, res) => {
 
 		const { farm, user, amount_invested } = await req.body;
 
-		//****************************************************************
 		// ??? need to add amount invested to the total amount reaised for the farm
-		// code goes here
-
 		let queryFarm = await Farm.findById(farm);
 
 		if (queryFarm) {
@@ -54,8 +51,6 @@ const createInvestment = async (req, res) => {
 			}
 		});
 
-		// ******************************************************************************
-
 		const investment = await Investment.create({
 			farm,
 			user,
@@ -66,14 +61,10 @@ const createInvestment = async (req, res) => {
 		});
 
 		// ??? need to substract amount invested from total amount reaised for the farm in case investment creation fails
-		// code goes here
-
 		!investment &&
 			(await Farm.findByIdAndUpdate(farm, {
 				$dec: { amount_raised: parseInt(amount_invested) },
 			}));
-
-		// ****************************
 
 		const responseObject = await Investment.findById(investment._id)
 			.populate({
@@ -87,7 +78,6 @@ const createInvestment = async (req, res) => {
 		if (error.errors) {
 			return res.status(422).send(error);
 		}
-		console.log(error);
 		return res.status(500).send(error);
 	}
 };
