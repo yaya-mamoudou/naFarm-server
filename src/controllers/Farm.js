@@ -35,9 +35,10 @@ const createFarm = async (req, res) => {
 			campaign_end_date,
 			about_farm,
 		});
-		const responseObject = await Farm.findById(farm._id)
-			.populate('author')
-			.select('-author.password');
+		const responseObject = await Farm.findById(farm._id).populate({
+			path: 'author',
+			select: '-password',
+		});
 
 		return res.status(201).json(responseObject);
 	} catch (error) {
