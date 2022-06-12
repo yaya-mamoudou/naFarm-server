@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
-const { isEmail } = require('validator');
 const { check } = require('express-validator');
-
-// const { body } = require('express-validator/check');
 
 const User = new Schema({
 	first_name: { type: String },
@@ -17,7 +14,7 @@ const User = new Schema({
 	},
 	phone: { type: Number },
 	dob: { type: Date },
-	status: { type: String },
+	status: { type: String, default: 'investor' },
 	token: { type: String },
 });
 
@@ -34,6 +31,9 @@ const validation = {
 			.withMessage('Email is required')
 			.isEmail()
 			.withMessage('Enter a valid email'),
+		check('status')
+			.isIn(['investor', 'farmer', 'admin'])
+			.withMessage('status must be one of these: [investor, farmer, admin]'),
 	],
 	login: [
 		check('email')
@@ -50,5 +50,3 @@ const validation = {
 };
 
 module.exports = { User: model('user', User), validation };
-
-// User.exists = ()=>{}

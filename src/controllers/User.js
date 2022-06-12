@@ -1,21 +1,14 @@
 const { User } = require('@models/index');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
-
-const createToken = async (id, email) => {
-	return await jwt.sign({ id, email }, process.env.TOKEN_KEY, { expiresIn: '72h' });
-};
+const { createToken } = require('@helpers/createToken');
+const { checkErrors } = require('@helpers/checkErrors');
 
 const createUser = async (req, res) => {
 	try {
-		let errors = validationResult(req);
+		checkErrors(req, res);
 
-		if (!errors.isEmpty()) {
-			return res.status(422).json(errors);
-		}
-
-		const { first_name, last_name, email, password, phone, dob, status = 'sponsor' } = req.body;
+		const { first_name, last_name, email, password, phone, dob, status } = req.body;
 
 		const isUserExist = await User.findOne({ email });
 
@@ -38,25 +31,33 @@ const createUser = async (req, res) => {
 		});
 
 		const token = createToken(user._id, user.email);
+		user.token = token;
 
-		// user.token = token;
+		const finalUserObject = {};
 
-		res.status(201).json({ user_id: user._id, token: token });
+		// remove password from object
+		Object.keys(user._doc).forEach(
+			(key) => key !== 'password' && (finalUserObject[key] = user[key])
+		);
+
+		res.cookie('jwt', token, { httpOnly: true, maxAge: 259200 });
+		res.status(201).json({ user: finalUserObject });
 	} catch (error) {
-		res.status(500).send(error.message);
+		if (error.errors) {
+			return res.status(422).send(error);
+		}
+		return res.status(500).send(error.message);
 	}
 };
 
 const login = async (req, res) => {
 	try {
-		let errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			return res.status(422).json(errors);
-		}
+		checkErrors(req, res);
+
 		const { password, email } = req.body;
 
 		// Validate if user exist in our database
-		const user = await User.findOne({ email });
+		const user = await User.findOne({ email: email.toLowerCase() });
 
 		const compare = await bcrypt.compare(password, user.password);
 
@@ -72,11 +73,16 @@ const login = async (req, res) => {
 				(key) => key !== 'password' && (finalUserObject[key] = user[key])
 			);
 
+			res.cookie('jwt', token, { httpOnly: true, maxAge: 86400 * 1000 * 3 });
+
 			return res.status(201).json({ user: finalUserObject });
 		}
 		return res.status(400).send('Invalid credentials');
 	} catch (error) {
-		res.status(500).send(error.message);
+		if (error.errors) {
+			return res.status(422).send(error);
+		}
+		return res.status(500).send(error.message);
 	}
 };
 

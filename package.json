@@ -14,7 +14,9 @@
     "@routes": "./src/routes",
     "@helpers": "./src/helpers",
     "@controllers": "./src/controllers",
-    "@db": "./src/db"
+    "@db": "./src/db",
+    "@middlewares": "./src/middlewares"
+
   },
   "keywords": [],
   "author": "",
