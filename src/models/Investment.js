@@ -22,7 +22,6 @@ const validation = {
 			.custom((id) => mongoose.Types.ObjectId.isValid(id))
 			.withMessage('The farm provided is not valid'),
 		check('amount_invested').notEmpty().withMessage('amount_invested is required'),
-		check('amount_expected').notEmpty().withMessage('amount_expected is required'),
 	],
 };
 

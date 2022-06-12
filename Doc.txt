@@ -4,3 +4,4 @@ Error codes:
 400 not found
 422 invalid data
 429 already exist
+410 unavailable

@@ -11,7 +11,7 @@ const Farm = new Schema({
 	targeted_amount: Number,
 	amount_raised: Number,
 	minimum_investment: Number,
-	status: { type: String, default: 'open' },
+	status: { type: String, default: 'open', enum: ['open', 'close'] },
 	campaign_start_date: Date,
 	campaign_end_date: Date,
 	about_farm: String,
