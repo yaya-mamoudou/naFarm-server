@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
-const { check } = require('express-validator');
+const { check, param } = require('express-validator');
 
 const Farm = new Schema({
 	title: String,
@@ -9,7 +9,7 @@ const Farm = new Schema({
 	farm_company_name: String,
 	interest_rate: Number,
 	targeted_amount: Number,
-	amount_raised: String,
+	amount_raised: Number,
 	minimum_investment: Number,
 	status: { type: String, default: 'open' },
 	campaign_start_date: Date,
@@ -33,6 +33,11 @@ const validation = {
 		check('campaign_end_date').notEmpty().withMessage('campaign_end_date is required'),
 		// .not()
 		check('about_farm').notEmpty().withMessage('about_farm is required'),
+	],
+	update: [
+		param('id')
+			.custom((id) => mongoose.Types.ObjectId.isValid(id))
+			.withMessage('The provided farm id is not a valid id'),
 	],
 };
 
