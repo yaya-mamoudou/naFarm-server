@@ -1,6 +1,6 @@
 const { checkErrors } = require('@helpers/checkErrors');
 const { Farm } = require('@models/Farm');
-const { default: mongoose } = require('mongoose');
+const mongoose = require('mongoose');
 
 const createFarm = async (req, res) => {
 	try {

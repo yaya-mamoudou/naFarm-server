@@ -1,4 +1,4 @@
-const { User } = require('@models/index');
+const { User } = require('@models/User');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const { createToken } = require('@helpers/createToken');
