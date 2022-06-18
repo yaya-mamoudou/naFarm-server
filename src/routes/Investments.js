@@ -5,4 +5,4 @@ const { createInvestment } = require('@controllers/Investment');
 
 router.post('/new_investment', validation.create, createInvestment);
 
-module.exports = router;
+module.exports = { investment: router };

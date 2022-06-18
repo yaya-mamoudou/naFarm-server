@@ -1,25 +1,25 @@
 require('dotenv').config();
 require('module-alias/register');
 
+const { PORT } = require('@config/config');
 const express = require('express');
 const connectDb = require('@db/connection');
-const User = require('@routes/User');
-const Farm = require('@routes/Farm');
-const Investment = require('@routes/Investments');
-const PORT = process.env.PORT || 4000;
+const { farm, user, investment, discovery } = require('@routes/');
+const port = PORT || 4000;
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api/v1/auth', User);
-app.use('/api/v1/farm', Farm);
-app.use('/api/v1/investment', Investment);
+app.use('/api/v1/auth', user);
+app.use('/api/v1/farm', farm);
+app.use('/api/v1/investment', investment);
+app.use('/api/v1/discovery', discovery);
 
 const start = async () => {
 	try {
 		await connectDb();
-		app.listen(PORT, console.log(`Server running on PORT http://localhost:${PORT}`));
+		app.listen(port, console.log(`Server running on PORT http://localhost:${port}`));
 	} catch (error) {
 		console.log(error);
 	}

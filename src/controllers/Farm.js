@@ -1,6 +1,7 @@
 const { checkErrors } = require('@helpers/checkErrors');
+const { uploadTocloudinary } = require('@helpers/CloudinarySetup');
 const { Farm } = require('@models/Farm');
-const mongoose = require('mongoose');
+const multer = require('multer');
 
 const createFarm = async (req, res) => {
 	try {
@@ -21,6 +22,10 @@ const createFarm = async (req, res) => {
 			about_farm,
 		} = await req.body;
 
+		// console.log(req.body.about_farm);
+
+		const data = await uploadTocloudinary(req.file.path, 'farm-images');
+
 		const farm = await Farm.create({
 			title,
 			author,
@@ -34,6 +39,7 @@ const createFarm = async (req, res) => {
 			campaign_start_date,
 			campaign_end_date,
 			about_farm,
+			image: { url: data.url, public_id: data.public_id },
 		});
 		const responseObject = await Farm.findById(farm._id).populate({
 			path: 'author',
@@ -123,4 +129,17 @@ const post_farm_activity = async (req, res) => {
 	}
 };
 
-module.exports = { createFarm, updateFarm, post_farm_activity };
+const get_all_farms = async (req, res) => {
+	try {
+		const allFarms = await Farm.find({});
+		return res.status(201).json(allFarms);
+	} catch (error) {
+		if (error.errors) {
+			return res.status(422).send(error);
+		}
+		console.log(error);
+		return res.status(500).send(error);
+	}
+};
+
+module.exports = { createFarm, updateFarm, post_farm_activity, get_all_farms };

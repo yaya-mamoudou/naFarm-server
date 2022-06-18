@@ -13,7 +13,6 @@ const User = new Schema({
 		type: String,
 	},
 	phone: { type: Number },
-	dob: { type: Date },
 	status: { type: String, default: 'investor' },
 	token: { type: String },
 });
@@ -31,9 +30,9 @@ const validation = {
 			.withMessage('Email is required')
 			.isEmail()
 			.withMessage('Enter a valid email'),
-		check('status')
-			.isIn(['investor', 'farmer', 'admin'])
-			.withMessage('status must be one of these: [investor, farmer, admin]'),
+		// check('status')
+		// 	.isIn(['investor', 'farmer', 'admin'])
+		// 	.withMessage('status must be one of these: [investor, farmer, admin]'),
 	],
 	login: [
 		check('email')
