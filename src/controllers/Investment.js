@@ -84,4 +84,18 @@ const createInvestment = async (req, res) => {
 	}
 };
 
-module.exports = { createInvestment };
+const userInvestments = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const investments = await Investment.find({ user: id });
+		return res.status(201).json(investments);
+	} catch (error) {
+		console.log(error);
+		if (error.errors) {
+			return res.status(422).send(error);
+		}
+		return res.status(500).send(error);
+	}
+};
+
+module.exports = { createInvestment, userInvestments };
