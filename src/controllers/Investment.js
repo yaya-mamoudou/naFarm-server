@@ -67,12 +67,7 @@ const createInvestment = async (req, res) => {
 				$dec: { amount_raised: parseInt(amount_invested) },
 			}));
 
-		const responseObject = await Investment.find({ user })
-			.populate({
-				path: 'user',
-				select: '-password',
-			})
-			.populate('farm');
+		const responseObject = await Investment.find({ user }).populate('farm');
 
 		return res.status(201).json(responseObject);
 	} catch (error) {
@@ -87,7 +82,7 @@ const createInvestment = async (req, res) => {
 const userInvestments = async (req, res) => {
 	try {
 		const { id } = req.params;
-		const investments = await Investment.find({ user: id });
+		const investments = await Investment.find({ user: id }).populate('farm');
 		return res.status(201).json(investments);
 	} catch (error) {
 		console.log(error);

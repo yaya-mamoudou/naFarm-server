@@ -109,12 +109,20 @@ const updateFarm = async (req, res) => {
 const post_farm_activity = async (req, res) => {
 	try {
 		checkErrors(req, res);
-		const { title, image, description, blog } = req.body;
-		console.log({ title, image, description, blog });
+		const { title, blog } = req.body;
+
+		const data = await uploadTocloudinary(req.file.path, 'farm-images');
+
 		const insertActivity = await Farm.findByIdAndUpdate(
 			req.params.id,
 			{
-				$push: { farm_activities: { title, image, description, blog } },
+				$push: {
+					farm_activities: {
+						title,
+						image: { url: data.url, public_id: data.public_id },
+						blog,
+					},
+				},
 			},
 			{ new: true }
 		);

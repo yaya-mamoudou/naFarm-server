@@ -8,7 +8,12 @@ router.post('/create_farm', upload.single('image'), validation.create, createFar
 
 router.put('/update_farm/:id', validation.update, updateFarm);
 
-router.post('/post_farm_activity/:id', validation.post_farm_activity, post_farm_activity);
+router.post(
+	'/post_farm_activity/:id',
+	upload.single('image'),
+	validation.post_farm_activity,
+	post_farm_activity
+);
 
 router.get('/all', get_all_farms);
 
