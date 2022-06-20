@@ -7,7 +7,7 @@ const createInvestment = async (req, res) => {
 	try {
 		checkErrors(req, res);
 
-		const { farm, user, amount_invested } = await req.body;
+		const { farm, user, amount_invested, amount_expected } = await req.body;
 
 		// ??? need to add amount invested to the total amount reaised for the farm
 		let queryFarm = await Farm.findById(farm);
@@ -15,16 +15,17 @@ const createInvestment = async (req, res) => {
 		if (queryFarm) {
 			if (queryFarm.status == 'open') {
 				// check is amount user trying to invest is more than what is left to invest in
-				if (queryFarm.g - queryFarm.raised_amount < amount_invested) {
+				if (queryFarm.targeted_amount - queryFarm.raised_amount < amount_invested) {
 					return res.status(422).send('amount is more than amount left to be raised');
 				}
 
-				if (queryFarm.minimum_investment % parseInt(amount_invested) !== 0) {
+				if (parseInt(amount_invested) % queryFarm.minimum_investment !== 0) {
 					//Check if the right amount to be invested was sent. (must be a multiple of the minimum_investment)
 					return res
 						.status(422)
 						.send('amount entered is not permissible for this campaign');
 				}
+				console.log('pass');
 			}
 
 			// block more investments when campaign is closed
@@ -66,7 +67,7 @@ const createInvestment = async (req, res) => {
 				$dec: { amount_raised: parseInt(amount_invested) },
 			}));
 
-		const responseObject = await Investment.findById(investment._id)
+		const responseObject = await Investment.find({ user })
 			.populate({
 				path: 'user',
 				select: '-password',
@@ -75,6 +76,7 @@ const createInvestment = async (req, res) => {
 
 		return res.status(201).json(responseObject);
 	} catch (error) {
+		console.log(error);
 		if (error.errors) {
 			return res.status(422).send(error);
 		}
