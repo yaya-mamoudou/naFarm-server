@@ -52,6 +52,7 @@ const createUser = async (req, res) => {
 
 const login = async (req, res) => {
 	try {
+		console.log(req.body);
 		checkErrors(req, res);
 
 		const { password, email } = req.body;
@@ -82,6 +83,7 @@ const login = async (req, res) => {
 		if (error.errors) {
 			return res.status(422).send(error);
 		}
+		console.log(error);
 		return res.status(500).send(error.message);
 	}
 };

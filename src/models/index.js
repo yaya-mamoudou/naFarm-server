@@ -2,5 +2,7 @@ const { User } = require('./User');
 const { Farm } = require('./Farm');
 const { Investment } = require('./Investment');
 const { Discovery } = require('./Discovery');
+const { Order } = require('./Order');
+const { Product } = require('./Product');
 
-module.exports = { User, Farm, Investment, Discovery };
+module.exports = { User, Farm, Investment, Discovery, Order, Product };

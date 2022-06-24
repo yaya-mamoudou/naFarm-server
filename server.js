@@ -4,7 +4,7 @@ require('module-alias/register');
 const { PORT } = require('@config/config');
 const express = require('express');
 const connectDb = require('@db/connection');
-const { farm, user, investment, discovery } = require('@routes/');
+const { farm, user, investment, discovery, product, order } = require('@routes/');
 const port = PORT || 4000;
 const app = express();
 
@@ -15,6 +15,8 @@ app.use('/api/v1/auth', user);
 app.use('/api/v1/farm', farm);
 app.use('/api/v1/investment', investment);
 app.use('/api/v1/discovery', discovery);
+app.use('/api/v1/product', product);
+app.use('/api/v1/order', order);
 
 const start = async () => {
 	try {
