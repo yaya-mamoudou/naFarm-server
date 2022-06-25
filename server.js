@@ -4,7 +4,7 @@ require('module-alias/register');
 const { PORT } = require('@config/config');
 const express = require('express');
 const connectDb = require('@db/connection');
-const { farm, user, investment, discovery, product, order } = require('@routes/');
+const { farm, user, investment, discovery, product, order, interest } = require('@routes/');
 const port = PORT || 4000;
 const app = express();
 
@@ -17,14 +17,13 @@ app.use('/api/v1/investment', investment);
 app.use('/api/v1/discovery', discovery);
 app.use('/api/v1/product', product);
 app.use('/api/v1/order', order);
+app.use('/api/v1/interest', interest);
 
-const start = async () => {
+(async () => {
 	try {
 		await connectDb();
 		app.listen(port, console.log(`Server running on PORT http://localhost:${port}`));
 	} catch (error) {
 		console.log(error);
 	}
-};
-
-start();
+})();

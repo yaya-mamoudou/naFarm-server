@@ -5,9 +5,14 @@ const createOrder = async (req, res) => {
 	try {
 		checkErrors(req);
 
-		const { items } = req.body;
+		const { items, order_amount, transportation_fee, delivery_location } = req.body;
 
-		const order = await Order.create({ items });
+		const order = await Order.create({
+			items,
+			order_amount,
+			transportation_fee,
+			delivery_location,
+		});
 
 		return res.status(201).json(order);
 	} catch (error) {

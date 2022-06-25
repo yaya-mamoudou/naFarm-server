@@ -4,5 +4,6 @@ const { farm } = require('@routes/Farm');
 const { investment } = require('@routes/Investments');
 const { product } = require('@routes/Product');
 const { order } = require('@routes/Order');
+const { interest } = require('@routes/Interest');
 
-module.exports = { user, discovery, farm, investment, product, order };
+module.exports = { user, discovery, farm, investment, product, order, interest };

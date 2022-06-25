@@ -34,7 +34,7 @@ const createProducts = async (req, res) => {
 
 const getProducts = async (req, res) => {
 	try {
-		const products = await Product.find({});
+		const products = await Product.find({}).populate({ path: 'seller', select: '-password' });
 
 		return res.status(201).json(products);
 	} catch (error) {
