@@ -3,8 +3,7 @@ const { Schema, model } = mongoose;
 const { check } = require('express-validator');
 
 const User = new Schema({
-	first_name: { type: String },
-	last_name: { type: String },
+	full_name: { type: String },
 	email: {
 		type: String,
 		unique: true,
@@ -30,9 +29,6 @@ const validation = {
 			.withMessage('Email is required')
 			.isEmail()
 			.withMessage('Enter a valid email'),
-		// check('status')
-		// 	.isIn(['investor', 'farmer', 'admin'])
-		// 	.withMessage('status must be one of these: [investor, farmer, admin]'),
 	],
 	login: [
 		check('email')

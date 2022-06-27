@@ -8,7 +8,7 @@ const createUser = async (req, res) => {
 	try {
 		checkErrors(req, res);
 
-		const { first_name, last_name, email, password, phone, dob, status } = req.body;
+		const { full_name, email, password, phone, dob, status } = req.body;
 
 		const isUserExist = await User.findOne({ email });
 
@@ -21,8 +21,7 @@ const createUser = async (req, res) => {
 
 		// Create user in our database
 		const user = await User.create({
-			first_name,
-			last_name,
+			full_name,
 			email: email.toLowerCase(), // sanitize: convert email to lowercase
 			password: encryptedPassword,
 			dob,

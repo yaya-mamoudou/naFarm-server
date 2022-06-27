@@ -7,7 +7,9 @@ const createInterest = async (req, res) => {
 
 		const { user, crop, description } = req.body;
 
-		const interest = await Interest.create({ user, crop, description });
+		const interest = await Interest.create({ user, crop, description }).then((t) =>
+			t.populate({ path: 'user', select: '-password' })
+		);
 
 		return res.status(201).json(interest);
 	} catch (error) {
