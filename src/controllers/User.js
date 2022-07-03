@@ -3,12 +3,16 @@ const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const { createToken } = require('@helpers/createToken');
 const { checkErrors } = require('@helpers/checkErrors');
+const { uploadTocloudinary } = require('@helpers/CloudinarySetup');
 
 const createUser = async (req, res) => {
 	try {
+		console.log('hey');
 		checkErrors(req, res);
 
-		const { full_name, email, password, phone, dob, status } = req.body;
+		const { full_name, email, password } = req.body;
+
+		console.log({ full_name, email, password });
 
 		const isUserExist = await User.findOne({ email });
 
@@ -19,18 +23,21 @@ const createUser = async (req, res) => {
 		//Encrypt user password
 		const encryptedPassword = await bcrypt.hash(password, 10);
 
+		console.log(req.body);
+
 		// Create user in our database
+		const data = await uploadTocloudinary(req.file.path, 'farm-images');
+
 		const user = await User.create({
 			full_name,
 			email: email.toLowerCase(), // sanitize: convert email to lowercase
 			password: encryptedPassword,
-			dob,
-			status,
-			phone,
+			profile: { url: data.url, public_id: data.public_id },
 		});
 
-		const token = createToken(user._id, user.email);
+		const token = await createToken(user._id, user.email);
 		user.token = token;
+		console.log(user);
 
 		const finalUserObject = {};
 
@@ -40,6 +47,7 @@ const createUser = async (req, res) => {
 		);
 
 		res.cookie('jwt', token, { httpOnly: true, maxAge: 259200 });
+
 		res.status(201).json({ user: finalUserObject });
 	} catch (error) {
 		if (error.errors) {

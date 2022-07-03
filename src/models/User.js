@@ -14,21 +14,22 @@ const User = new Schema({
 	phone: { type: Number },
 	status: { type: String, default: 'investor' },
 	token: { type: String },
+	profile: { url: String, public_id: String },
 });
 
 const validation = {
 	register: [
-		check('first_name').notEmpty().withMessage('first_name is required'),
-		check('password')
-			.notEmpty()
-			.withMessage('password is required')
-			.isLength({ min: 6 })
-			.withMessage('password must be minimum 6 characters'),
-		check('email')
-			.notEmpty()
-			.withMessage('Email is required')
-			.isEmail()
-			.withMessage('Enter a valid email'),
+		// check('full_name').notEmpty().withMessage('first_name is required'),
+		// check('password')
+		// 	.notEmpty()
+		// 	.withMessage('password is required')
+		// 	.isLength({ min: 6 })
+		// 	.withMessage('password must be minimum 6 characters'),
+		// check('email')
+		// 	.notEmpty()
+		// 	.withMessage('Email is required')
+		// 	.isEmail()
+		// 	.withMessage('Enter a valid email'),
 	],
 	login: [
 		check('email')
