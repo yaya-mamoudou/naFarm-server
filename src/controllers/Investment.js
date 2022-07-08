@@ -7,7 +7,7 @@ const createInvestment = async (req, res) => {
 	try {
 		checkErrors(req, res);
 
-		const { farm, user, amount_invested, amount_expected } = await req.body;
+		const { farm, user, amount_invested, payment_ref } = await req.body;
 
 		// ??? need to add amount invested to the total amount reaised for the farm
 		let queryFarm = await Farm.findById(farm);
@@ -59,6 +59,7 @@ const createInvestment = async (req, res) => {
 			amount_expected:
 				(parseInt(amount_invested) * queryFarm.interest_rate) / 100 +
 				parseInt(amount_invested),
+			payment_ref,
 		});
 
 		// ??? need to substract amount invested from total amount reaised for the farm in case investment creation fails

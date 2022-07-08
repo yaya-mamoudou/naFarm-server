@@ -7,7 +7,6 @@ const { uploadTocloudinary } = require('@helpers/CloudinarySetup');
 
 const createUser = async (req, res) => {
 	try {
-		console.log('hey');
 		checkErrors(req, res);
 
 		const { full_name, email, password } = req.body;

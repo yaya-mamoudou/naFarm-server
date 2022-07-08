@@ -7,6 +7,7 @@ const Investment = new Schema({
 	farm: { type: mongoose.ObjectId, ref: 'farm' },
 	amount_invested: Number,
 	amount_expected: Number,
+	payment_ref: String,
 });
 
 const validation = {
@@ -22,6 +23,7 @@ const validation = {
 			.custom((id) => mongoose.Types.ObjectId.isValid(id))
 			.withMessage('The farm provided is not valid'),
 		check('amount_invested').notEmpty().withMessage('amount_invested is required'),
+		check('payment_ref').notEmpty().withMessage('payment_ref is required'),
 	],
 };
 
