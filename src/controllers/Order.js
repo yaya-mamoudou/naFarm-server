@@ -5,19 +5,27 @@ const createOrder = async (req, res) => {
 	try {
 		checkErrors(req);
 
-		const { order, order_amount, transportation_fee, delivery_location } = req.body;
-
-		console.log({ order, order_amount, transportation_fee, delivery_location });
+		const { user, order, order_amount, transportation_fee, delivery_location } = req.body;
 
 		const command = await Order.create({
 			order,
 			order_amount,
 			transportation_fee,
 			delivery_location,
+			user,
 		});
 
-		return res.status(201).json(command);
+		const curr = await Order.findById(command._id)
+			.populate({
+				path: 'order.item delivery_location',
+				select: '-description',
+				populate: { path: 'seller', select: '-password -status -email' },
+			})
+			.populate('delivery_location');
+
+		return res.status(201).json(curr);
 	} catch (error) {
+		console.log(error);
 		if (error.errors) {
 			return res.status(422).send(error);
 		}
@@ -27,10 +35,22 @@ const createOrder = async (req, res) => {
 
 const getOrders = async (req, res) => {
 	try {
-		const orders = await Order.find({}).populate('order.item');
+		let orders;
+		if (req.params?.id) {
+			orders = await Order.find({ user: req.params?.id })
+				.populate({
+					path: 'order.item delivery_location',
+					select: '-description',
+					populate: { path: 'seller', select: '-password -status -email' },
+				})
+				.populate('delivery_location');
+		} else {
+			orders = await Order.find({}).populate('order.item').populate('user');
+		}
 
 		return res.status(201).json(orders);
 	} catch (error) {
+		console.log(error);
 		if (error.errors) {
 			return res.status(422).send(error);
 		}

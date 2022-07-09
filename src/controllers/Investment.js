@@ -83,7 +83,12 @@ const createInvestment = async (req, res) => {
 const userInvestments = async (req, res) => {
 	try {
 		const { id } = req.params;
-		const investments = await Investment.find({ user: id }).populate('farm');
+		let investments;
+		if (id) {
+			investments = await Investment.find({ user: id }).populate('farm');
+		} else {
+			investments = await Investment.find({}).populate('farm');
+		}
 		return res.status(201).json(investments);
 	} catch (error) {
 		console.log(error);
@@ -94,4 +99,29 @@ const userInvestments = async (req, res) => {
 	}
 };
 
-module.exports = { createInvestment, userInvestments };
+const totalAmount = async (req, res) => {
+	try {
+		const { id } = req.params;
+		let total_amount;
+		if (id) {
+			console.log(id);
+			total_amount = await Investment.aggregate([
+				{ $match: { user: mongoose.Types.ObjectId(id) } },
+				{ $group: { _id: null, total_amount: { $sum: '$amount_invested' } } },
+			]);
+		} else {
+			total_amount = await Investment.aggregate([
+				{ $group: { _id: null, total_amount: { $sum: '$amount_invested' } } },
+			]);
+		}
+		return res.status(201).json(total_amount);
+	} catch (error) {
+		console.log(error);
+		if (error.errors) {
+			return res.status(422).send(error);
+		}
+		return res.status(500).send(error);
+	}
+};
+
+module.exports = { createInvestment, userInvestments, totalAmount };
