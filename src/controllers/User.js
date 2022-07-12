@@ -9,14 +9,14 @@ const createUser = async (req, res) => {
 	try {
 		checkErrors(req, res);
 
-		const { full_name, email, password } = req.body;
+		const { full_name, phone, password } = req.body;
 
-		console.log({ full_name, email, password });
+		console.log({ full_name, phone, password });
 
-		const isUserExist = await User.findOne({ email });
+		const isUserExist = await User.findOne({ phone });
 
 		if (isUserExist) {
-			return res.status(409).send('User Already Exist with this email. Please Login!');
+			return res.status(409).send('User Already Exist with this phone. Please Login!');
 		}
 
 		//Encrypt user password
@@ -29,12 +29,12 @@ const createUser = async (req, res) => {
 
 		const user = await User.create({
 			full_name,
-			email: email.toLowerCase(), // sanitize: convert email to lowercase
+			phone: phone, // sanitize: convert phone to lowercase
 			password: encryptedPassword,
 			profile: { url: data.url, public_id: data.public_id },
 		});
 
-		const token = await createToken(user._id, user.email);
+		const token = await createToken(user._id, user.phone);
 		user.token = token;
 		console.log(user);
 
@@ -61,16 +61,16 @@ const login = async (req, res) => {
 		console.log(req.body);
 		checkErrors(req, res);
 
-		const { password, email } = req.body;
+		const { password, phone } = req.body;
 
 		// Validate if user exist in our database
-		const user = await User.findOne({ email: email.toLowerCase() });
+		const user = await User.findOne({ phone: phone });
 
 		const compare = await bcrypt.compare(password, user.password);
 
 		if (user && compare) {
 			// Create token
-			const token = await createToken(user._id, user.email);
+			const token = await createToken(user._id, user.phone);
 			user.token = token;
 
 			const finalUserObject = {};

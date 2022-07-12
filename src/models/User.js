@@ -11,7 +11,7 @@ const User = new Schema({
 	password: {
 		type: String,
 	},
-	phone: { type: Number },
+	phone: { type: Number, unique: true },
 	status: { type: String, default: 'investor' },
 	token: { type: String },
 	profile: { url: String, public_id: String },
@@ -32,11 +32,11 @@ const validation = {
 		// 	.withMessage('Enter a valid email'),
 	],
 	login: [
-		check('email')
+		check('phone')
 			.notEmpty()
-			.withMessage('email is required')
-			.isEmail()
-			.withMessage('input a valid email address'),
+			.withMessage('phone is required')
+			.isNumeric()
+			.withMessage('input a valid number address'),
 		check('password')
 			.notEmpty()
 			.withMessage('password is required')
